@@ -26,7 +26,7 @@ namespace LiveSplit.UI.Components
         public float PaddingBottom { get; set; }
         public float PaddingRight => 7f;
 
-        private float MonospacedValuePadding => ValueLabel.IsMonospaced ? 2 : 0;
+        private float MonospacedValuePadding => ValueLabel.IsMonospaced ? 3 : 0;
 
         public bool DisplayTwoRows { get; set; }
 
