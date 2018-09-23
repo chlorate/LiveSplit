@@ -241,18 +241,18 @@ namespace LiveSplit.UI
 
         private string CutOff(Graphics g)
         {
-            if (ActualWidth < Width)
+            if (ActualWidth <= Width)
                 return Text;
 
             var cutOffText = Text;
             var actualWidth = ActualWidth;
-            while (actualWidth >= Width && !string.IsNullOrEmpty(cutOffText))
+            while (actualWidth > Width && !string.IsNullOrEmpty(cutOffText))
             {
                 cutOffText = cutOffText.Remove(cutOffText.Length - 1, 1);
                 actualWidth = MeasureActualWidth(cutOffText + "...", g);
             }
 
-            if (actualWidth >= Width)
+            if (actualWidth > Width)
                 return "";
             return cutOffText + "...";
         }
