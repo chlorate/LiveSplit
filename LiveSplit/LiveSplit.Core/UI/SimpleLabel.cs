@@ -243,13 +243,16 @@ namespace LiveSplit.UI
         {
             if (ActualWidth < Width)
                 return Text;
+
             var cutOffText = Text;
-            while (ActualWidth >= Width && !string.IsNullOrEmpty(cutOffText))
+            var actualWidth = ActualWidth;
+            while (actualWidth >= Width && !string.IsNullOrEmpty(cutOffText))
             {
                 cutOffText = cutOffText.Remove(cutOffText.Length - 1, 1);
-                ActualWidth = MeasureActualWidth(cutOffText + "...", g);
+                actualWidth = MeasureActualWidth(cutOffText + "...", g);
             }
-            if (ActualWidth >= Width)
+
+            if (actualWidth >= Width)
                 return "";
             return cutOffText + "...";
         }
