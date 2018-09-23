@@ -35,7 +35,7 @@ namespace LiveSplit.UI.Components
         public float MinimumWidth => 20;
 
         public float HorizontalWidth
-            => Math.Max(NameMeasureLabel.ActualWidth, ValueLabel.ActualWidth + MonospacedValuePadding) + 10;
+            => Math.Max(NameMeasureLabel.ActualWidth, ValueLabel.ActualWidth + 2 * MonospacedValuePadding) + 10;
 
         public float MinimumHeight { get; set; }
 
@@ -99,15 +99,15 @@ namespace LiveSplit.UI.Components
                 NameMeasureLabel.SetActualWidth(g);
                 ValueLabel.SetActualWidth(g);
 
-                NameLabel.Width = width - ValueLabel.ActualWidth - 10;
+                NameLabel.Width = width - ValueLabel.ActualWidth - MonospacedValuePadding - 10;
                 NameLabel.Height = VerticalHeight;
                 NameLabel.X = 5;
                 NameLabel.Y = 0;
 
-                ValueLabel.Width = width - 10 - MonospacedValuePadding;
+                ValueLabel.Width = width - 10 - 2 * MonospacedValuePadding;
                 ValueLabel.Height = VerticalHeight;
                 ValueLabel.Y = 0;
-                ValueLabel.X = 5;
+                ValueLabel.X = 5 + MonospacedValuePadding;
 
                 PrepareDraw(state, LayoutMode.Vertical);
 
@@ -143,10 +143,10 @@ namespace LiveSplit.UI.Components
             NameLabel.X = 5;
             NameLabel.Y = 0;
 
-            ValueLabel.Width = width - 10 - MonospacedValuePadding;
+            ValueLabel.Width = width - 10 - 2 * MonospacedValuePadding;
             ValueLabel.Height = height;
             ValueLabel.Y = 0;
-            ValueLabel.X = 5;
+            ValueLabel.X = 5 + MonospacedValuePadding;
 
             PrepareDraw(state, LayoutMode.Horizontal);
 
