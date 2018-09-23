@@ -26,6 +26,8 @@ namespace LiveSplit.UI.Components
         public float PaddingBottom { get; set; }
         public float PaddingRight => 7f;
 
+        private float MonospacedValuePadding => ValueLabel.IsMonospaced ? 2 : 0;
+
         public bool DisplayTwoRows { get; set; }
 
         public float VerticalHeight { get; set; }
@@ -33,7 +35,7 @@ namespace LiveSplit.UI.Components
         public float MinimumWidth => 20;
 
         public float HorizontalWidth
-            => Math.Max(NameMeasureLabel.ActualWidth, ValueLabel.ActualWidth) + 10;
+            => Math.Max(NameMeasureLabel.ActualWidth, ValueLabel.ActualWidth + MonospacedValuePadding) + 10;
 
         public float MinimumHeight { get; set; }
 
@@ -102,7 +104,7 @@ namespace LiveSplit.UI.Components
                 NameLabel.X = 5;
                 NameLabel.Y = 0;
 
-                ValueLabel.Width = ValueLabel.IsMonospaced ? width - 12 : width - 10;
+                ValueLabel.Width = width - 10 - MonospacedValuePadding;
                 ValueLabel.Height = VerticalHeight;
                 ValueLabel.Y = 0;
                 ValueLabel.X = 5;
@@ -141,7 +143,7 @@ namespace LiveSplit.UI.Components
             NameLabel.X = 5;
             NameLabel.Y = 0;
 
-            ValueLabel.Width = ValueLabel.IsMonospaced ? width - 12 : width - 10;
+            ValueLabel.Width = width - 10 - MonospacedValuePadding;
             ValueLabel.Height = height;
             ValueLabel.Y = 0;
             ValueLabel.X = 5;
