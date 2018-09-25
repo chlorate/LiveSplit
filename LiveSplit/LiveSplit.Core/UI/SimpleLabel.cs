@@ -141,6 +141,9 @@ namespace LiveSplit.UI
         {
             if (text != null)
             {
+                // Text is sometimes trimmed when width == ActualWidth.
+                format.Trimming = width < ActualWidth - 0.001f ? StringTrimming.EllipsisCharacter : StringTrimming.None;
+
                 if (g.TextRenderingHint == TextRenderingHint.AntiAlias && OutlineColor.A > 0)
                 {
                     var fontSize = GetFontSize(g);
