@@ -241,7 +241,7 @@ namespace LiveSplit.UI
 
         private string CutOff(Graphics g)
         {
-            if (ActualWidth <= Width)
+            if (ActualWidth < Width + 0.001f)
                 return Text;
 
             var cutOffText = Text;
