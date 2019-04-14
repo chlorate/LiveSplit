@@ -26,7 +26,10 @@ namespace LiveSplit.UI
         public Color OutlineColor { get; set; }
 
         public bool HasShadow { get; set; }
+
         public bool IsMonospaced { get; set; }
+        private float MonospacedDigitWidth { get; set; }
+        public float MonospacedPadding { get; set; }
 
         private StringFormat Format { get; set; }
 
@@ -108,16 +111,13 @@ namespace LiveSplit.UI
                     LineAlignment = VerticalAlignment
                 };
 
-                var measurement = MeasureText(g, "0", Font, new Size((int)(Width + 0.5f), (int)(Height + 0.5f)), TextFormatFlags.NoPadding).Width;
-                var offset = Width;
                 var charIndex = 0;
                 SetActualWidth(g);
                 var cutOffText = CutOff(g);
 
-                offset = Width - MeasureActualWidth(cutOffText, g);
+                var offset = Width - MeasureActualWidth(cutOffText, g);
                 if (HorizontalAlignment != StringAlignment.Far)
                     offset = 0f;
-
 
                 while (charIndex < cutOffText.Length)
                 {
@@ -125,9 +125,9 @@ namespace LiveSplit.UI
                     var curChar = cutOffText[charIndex];
 
                     if (char.IsDigit(curChar))
-                        curOffset = measurement;
+                        curOffset = MonospacedDigitWidth;
                     else
-                        curOffset = MeasureText(g, curChar.ToString(), Font, new Size((int)(Width + 0.5f), (int)(Height + 0.5f)), TextFormatFlags.NoPadding).Width;
+                        curOffset = g.MeasureString(curChar.ToString(), Font).Width - MonospacedPadding;
 
                     DrawText(curChar.ToString(), g, X + offset - curOffset / 2f, Y, curOffset * 2f, Height, monoFormat);
 
@@ -197,7 +197,13 @@ namespace LiveSplit.UI
             if (!IsMonospaced)
                 ActualWidth = g.MeasureString(Text, Font, 9999, Format).Width;
             else
+            {
+                var paddedDigitWidth = g.MeasureString("0", Font).Width;
+                MonospacedDigitWidth = g.MeasureString("00", Font).Width - paddedDigitWidth;
+                MonospacedPadding = paddedDigitWidth - MonospacedDigitWidth;
+
                 ActualWidth = MeasureActualWidth(Text, g);
+            }
         }
 
         public string CalculateAlternateText(Graphics g, float width)
@@ -222,17 +228,16 @@ namespace LiveSplit.UI
         private float MeasureActualWidth(string text, Graphics g)
         {
             var charIndex = 0;
-            var measurement = MeasureText(g, "0", Font, new Size((int)(Width + 0.5f), (int)(Height + 0.5f)), TextFormatFlags.NoPadding).Width;
-            var offset = 0;
+            var offset = 0f;
 
             while (charIndex < text.Length)
             {
                 var curChar = text[charIndex];
 
                 if (char.IsDigit(curChar))
-                    offset += measurement;
+                    offset += MonospacedDigitWidth;
                 else
-                    offset += MeasureText(g, curChar.ToString(), Font, new Size((int)(Width + 0.5f), (int)(Height + 0.5f)), TextFormatFlags.NoPadding).Width;
+                    offset += g.MeasureString(curChar.ToString(), Font).Width - MonospacedPadding;
 
                 charIndex++;
             }

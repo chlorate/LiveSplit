@@ -33,7 +33,7 @@ namespace LiveSplit.UI.Components
         public float MinimumWidth => 20;
 
         public float HorizontalWidth
-            => Math.Max(NameMeasureLabel.ActualWidth, ValueLabel.ActualWidth) + 10;
+            => Math.Max(NameMeasureLabel.ActualWidth, ValueLabel.ActualWidth + (ValueLabel.IsMonospaced ? ValueLabel.MonospacedPadding : 0)) + 10;
 
         public float MinimumHeight { get; set; }
 
@@ -102,10 +102,17 @@ namespace LiveSplit.UI.Components
                 NameLabel.X = 5;
                 NameLabel.Y = 0;
 
-                ValueLabel.Width = ValueLabel.IsMonospaced ? width - 12 : width - 10;
+                ValueLabel.Width = width - 10;
                 ValueLabel.Height = VerticalHeight;
                 ValueLabel.Y = 0;
                 ValueLabel.X = 5;
+
+                if (ValueLabel.IsMonospaced)
+                {
+                    NameLabel.Width -= ValueLabel.MonospacedPadding;
+                    ValueLabel.Width -= ValueLabel.MonospacedPadding;
+                    ValueLabel.X += ValueLabel.MonospacedPadding / 2f;
+                }
 
                 PrepareDraw(state, LayoutMode.Vertical);
 
@@ -141,10 +148,16 @@ namespace LiveSplit.UI.Components
             NameLabel.X = 5;
             NameLabel.Y = 0;
 
-            ValueLabel.Width = ValueLabel.IsMonospaced ? width - 12 : width - 10;
+            ValueLabel.Width = width - 10;
             ValueLabel.Height = height;
             ValueLabel.Y = 0;
             ValueLabel.X = 5;
+
+            if (ValueLabel.IsMonospaced)
+            {
+                ValueLabel.Width -= ValueLabel.MonospacedPadding;
+                ValueLabel.X += ValueLabel.MonospacedPadding / 2f;
+            }
 
             PrepareDraw(state, LayoutMode.Horizontal);
 
