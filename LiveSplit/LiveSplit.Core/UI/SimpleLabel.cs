@@ -91,6 +91,10 @@ namespace LiveSplit.UI
                 FormatFlags = StringFormatFlags.NoWrap,
                 Trimming = StringTrimming.EllipsisCharacter
             };
+
+            // Setting a range causes Graphics.MeasureString to return more accurate values for some reason.
+            CharacterRange[] ranges = { new CharacterRange(0, 1) };
+            Format.SetMeasurableCharacterRanges(ranges);
         }
 
         public void Draw(Graphics g)
@@ -127,7 +131,7 @@ namespace LiveSplit.UI
                     if (char.IsDigit(curChar))
                         curOffset = MonospacedDigitWidth;
                     else
-                        curOffset = g.MeasureString(curChar.ToString(), Font).Width - MonospacedPadding;
+                        curOffset = g.MeasureString(curChar.ToString(), Font, 0, Format).Width - MonospacedPadding;
 
                     DrawText(curChar.ToString(), g, X + offset - curOffset / 2f, Y, curOffset * 2f, Height, monoFormat);
 
@@ -198,8 +202,8 @@ namespace LiveSplit.UI
                 ActualWidth = g.MeasureString(Text, Font, 9999, Format).Width;
             else
             {
-                var paddedDigitWidth = g.MeasureString("0", Font).Width;
-                MonospacedDigitWidth = g.MeasureString("00", Font).Width - paddedDigitWidth;
+                var paddedDigitWidth = g.MeasureString("0", Font, 0, Format).Width;
+                MonospacedDigitWidth = g.MeasureString("00", Font, 0, Format).Width - paddedDigitWidth;
                 MonospacedPadding = paddedDigitWidth - MonospacedDigitWidth;
 
                 ActualWidth = MeasureActualWidth(Text, g);
@@ -237,7 +241,7 @@ namespace LiveSplit.UI
                 if (char.IsDigit(curChar))
                     offset += MonospacedDigitWidth;
                 else
-                    offset += g.MeasureString(curChar.ToString(), Font).Width - MonospacedPadding;
+                    offset += g.MeasureString(curChar.ToString(), Font, 0, Format).Width - MonospacedPadding;
 
                 charIndex++;
             }
