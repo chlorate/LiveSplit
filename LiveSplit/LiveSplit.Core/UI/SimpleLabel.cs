@@ -12,6 +12,14 @@ namespace LiveSplit.UI
 {
     public class SimpleLabel
     {
+        private static readonly float[,] ShadowOffsets = {
+            {0.13f, 0f},
+            {0.13f, 0.065f},
+            {0.13f, 0.13f},
+            {0.065f, 0.13f},
+            {0f, 0.13f},
+        };
+
         public string Text { get; set; }
         public ICollection<string> AlternateText { get; set; }
         public float X { get; set; }
@@ -150,12 +158,13 @@ namespace LiveSplit.UI
                     {
                         if (HasShadow)
                         {
-                            gp.AddString(text, Font.FontFamily, (int)Font.Style, fontSize, new RectangleF(x + 1f, y + 1f, width, height), format);
-                            g.FillPath(shadowBrush, gp);
-                            gp.Reset();
-                            gp.AddString(text, Font.FontFamily, (int)Font.Style, fontSize, new RectangleF(x + 2f, y + 2f, width, height), format);
-                            g.FillPath(shadowBrush, gp);
-                            gp.Reset();
+                            for (var i = 0; i < ShadowOffsets.GetLength(0); i++)
+                            {
+                                var rectangle = new RectangleF(x + fontSize * ShadowOffsets[i, 0], y + fontSize * ShadowOffsets[i, 1], width, height);
+                                gp.AddString(text, Font.FontFamily, (int)Font.Style, fontSize, rectangle, format);
+                                g.FillPath(shadowBrush, gp);
+                                gp.Reset();
+                            }
                         }
                         gp.AddString(text, Font.FontFamily, (int)Font.Style, fontSize, new RectangleF(x, y, width, height), format);
                         g.DrawPath(outline, gp);
@@ -168,8 +177,12 @@ namespace LiveSplit.UI
                     {
                         using (var shadowBrush = new SolidBrush(ShadowColor))
                         {
-                            g.DrawString(text, Font, shadowBrush, new RectangleF(x + 1f, y + 1f, width, height), format);
-                            g.DrawString(text, Font, shadowBrush, new RectangleF(x + 2f, y + 2f, width, height), format);
+                            var fontSize = GetFontSize(g);
+                            for (var i = 0; i < ShadowOffsets.GetLength(0); i++)
+                            {
+                                var rectangle = new RectangleF(x + fontSize * ShadowOffsets[i, 0], y + fontSize * ShadowOffsets[i, 1], width, height);
+                                g.DrawString(text, Font, shadowBrush, rectangle, format);
+                            }
                         }
                     }
                     g.DrawString(text, Font, Brush, new RectangleF(x, y, width, height), format);
