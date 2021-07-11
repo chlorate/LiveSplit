@@ -154,7 +154,7 @@ namespace LiveSplit.UI
                     var fontSize = GetFontSize(g);
                     using (var shadowBrush = new SolidBrush(ShadowColor))
                     using (var gp = new GraphicsPath())
-                    using (var outline = new Pen(OutlineColor, GetOutlineSize(fontSize)) { LineJoin = LineJoin.Round })
+                    using (var outline = new Pen(OutlineColor, GetOutlineSize(fontSize)) { LineJoin = LineJoin.Miter })
                     {
                         if (HasShadow)
                         {
