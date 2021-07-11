@@ -100,6 +100,17 @@ namespace LiveSplit.UI
                 var actualText = CalculateAlternateText(g, Width);
                 DrawText(actualText, g, X, Y, Width, Height, Format);
             }
+            else if (FontHasMonospacedDigits(g))
+            {
+                var offset = -GetFontPadding(g);
+                if (HorizontalAlignment == StringAlignment.Far)
+                {
+                    offset *= -0.75f;
+                }
+
+                SetActualWidth(g);
+                DrawText(Text, g, X + offset, Y, Width, Height, Format);
+            }
             else
             {
                 var monoFormat = new StringFormat
@@ -189,6 +200,25 @@ namespace LiveSplit.UI
             return Font.Size;
         }
 
+        private float GetFontPadding(Graphics g)
+        {
+            return (g.MeasureString("0", Font, 0, Format).Width * 2f - g.MeasureString("00", Font, 0, Format).Width) / 2f;
+        }
+
+        private bool FontHasMonospacedDigits(Graphics g)
+        {
+            var digitWidth = g.MeasureString("0", Font, 0, Format).Width;
+            for (var i = '1'; i <= '9'; i++)
+            {
+                if (g.MeasureString(Char.ToString(i), Font, 0, Format).Width != digitWidth)
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
         public void SetActualWidth(Graphics g)
         {
             Format.Alignment = HorizontalAlignment;
@@ -196,6 +226,8 @@ namespace LiveSplit.UI
 
             if (!IsMonospaced)
                 ActualWidth = g.MeasureString(Text, Font, 9999, Format).Width;
+            else if (FontHasMonospacedDigits(g))
+                ActualWidth = g.MeasureString(Text, Font, 0, Format).Width - GetFontPadding(g) * 2f;
             else
                 ActualWidth = MeasureActualWidth(Text, g);
         }
